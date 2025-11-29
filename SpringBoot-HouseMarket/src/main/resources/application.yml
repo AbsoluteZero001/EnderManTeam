@@ -28,3 +28,8 @@ spring:
       hibernate:
         # Hibernate方言
         dialect: org.hibernate.dialect.MySQLDialect
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.springboot.springboothousemarket.Entitiy
