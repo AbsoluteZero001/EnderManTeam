@@ -35,9 +35,13 @@ public class House {
     @TableField("price")
     private BigDecimal price;
 
-    @Schema(description = "房屋类型: ONE_BED(一居), TWO_BED(两居), VILLA(别墅)等")
+    @Schema(description = "房屋类型: 平层/跃层/错层/复式")
     @TableField("house_type")
     private String houseType;
+
+    @Schema(description = "房屋面积")
+    @TableField("area")
+    private Double area;
 
     @Schema(description = "图片地址列表(JSON格式或逗号分隔)")
     @TableField("images")

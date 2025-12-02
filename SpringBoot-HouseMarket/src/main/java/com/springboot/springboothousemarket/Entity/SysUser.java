@@ -38,6 +38,10 @@ public class SysUser {
     @TableField("avatar")
     private String avatar;
 
+    @Schema(description = "用户状态: normal(正常), disabled(禁用)")
+    @TableField("status")
+    private String status;
+
     @Schema(description = "注册时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;

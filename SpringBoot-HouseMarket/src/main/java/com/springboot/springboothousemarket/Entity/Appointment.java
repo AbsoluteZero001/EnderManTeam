@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@Schema(description = "房屋订单信息")
-@TableName("house_order")
-public class HouseOrder {
+@Schema(description = "预约信息")
+@TableName("appointment")
+public class Appointment {
     @Schema(description = "主键ID")
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -28,19 +26,19 @@ public class HouseOrder {
     @TableField("landlord_id")
     private Long landlordId;
 
-    @Schema(description = "订单金额")
-    @TableField("amount")
-    private BigDecimal amount;
+    @Schema(description = "预约时间")
+    @TableField("appointment_time")
+    private LocalDateTime appointmentTime;
 
-    @Schema(description = "租赁开始日期")
-    @TableField("start_date")
-    private LocalDate startDate;
+    @Schema(description = "预约地点")
+    @TableField("location")
+    private String location;
 
-    @Schema(description = "租赁结束日期")
-    @TableField("end_date")
-    private LocalDate endDate;
+    @Schema(description = "备注")
+    @TableField("notes")
+    private String notes;
 
-    @Schema(description = "订单状态: pending(待支付)、paid(已支付)、completed(已完成)、cancelled(已取消)")
+    @Schema(description = "预约状态: pending(待处理)、approved(已批准)、rejected(已拒绝)、completed(已完成)、canceled(已取消)")
     @TableField("status")
     private String status;
 
