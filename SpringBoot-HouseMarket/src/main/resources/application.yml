@@ -44,6 +44,8 @@ springdoc:
     operationsSorter: alpha
     # 默认模型展开深度设置为-1，不显示模型
     defaultModelsExpandDepth: -1
+    # Swagger UI访问路径
+    path: /swagger-ui.html
 
 server:
   port: 8082
