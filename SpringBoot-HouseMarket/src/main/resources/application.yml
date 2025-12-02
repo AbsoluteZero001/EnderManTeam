@@ -25,17 +25,7 @@ spring:
       write-dates-as-timestamps: false
     time-zone: Asia/Shanghai
     default-property-inclusion: non_null
-  # 字符编码配置
-  http:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-  # 数据库初始化配置
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:db/init_spring.sql
+
 
 # SpringDoc Swagger配置
 springdoc:
