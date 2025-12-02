@@ -10,7 +10,6 @@ import java.util.List;
 public class HouseOrderServiceImpl implements HouseOrderService {
 
     private final HouseOrderMapper houseOrderMapper;
-
     public HouseOrderServiceImpl(HouseOrderMapper houseOrderMapper) {
         this.houseOrderMapper = houseOrderMapper;
     } //构造函数注入
