@@ -179,9 +179,11 @@
             }
 
             // 构造用户数据
-            let role = document.getElementById('role').value;
-            if (role === 'tenant') role = 'TENANT';
-            if (role === 'landlord') role = 'LANDLORD';
+            let inputValue = document.getElementById('role').value;
+            let role;
+            if (inputValue === 'tenant') role = 'TENANT';
+            else if (inputValue === 'landlord') role = 'LANDLORD';
+            else role = inputValue;
             
             const userData = {
                 username: document.getElementById('username').value,

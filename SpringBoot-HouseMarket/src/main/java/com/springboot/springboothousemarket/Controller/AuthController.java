@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Tag(name = "认证API")
-@RequestMapping("/user")
+@RequestMapping("/api")
 @RestController
 public class AuthController {
 
@@ -42,13 +42,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", "两次密码不一致"));
         }
 
-        // 2. 角色转换：将前端传入的中文角色转换为后端使用的英文角色
+        // 2. 角色转换：直接使用前端传入的英文角色
         String role;
         switch (req.getRole()) {
-            case "租客":
+            case "TENANT":
                 role = "TENANT";
                 break;
-            case "房东":
+            case "LANDLORD":
                 role = "LANDLORD";
                 break;
             default:
@@ -68,8 +68,8 @@ public class AuthController {
         SysUser user = new SysUser();
         user.setUsername(req.getUsername());
         user.setPassword(passwordEncoder.encode(req.getPassword()));
-        user.setRealName(req.getRealName());
-        user.setPhone(req.getPhone());
+        user.setRealName(req.getUsername()); // 临时使用用户名作为真实姓名
+        user.setPhone("13800138000"); // 设置默认手机号
         user.setRole(role); // 使用转换后的英文角色
         user.setStatus("normal");
         user.setAvatar(null);  // 默认无头像
