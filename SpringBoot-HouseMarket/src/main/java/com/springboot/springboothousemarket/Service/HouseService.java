@@ -1,10 +1,12 @@
 package com.springboot.springboothousemarket.Service;
 
-import com.springboot.springboothousemarket.Entitiy.House;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.springboot.springboothousemarket.Entity.House;
 
 import java.util.List;
 
-public interface HouseService {
+public interface HouseService extends IService<House> {
 
     /**
      * 创建房源信息
@@ -53,4 +55,21 @@ public interface HouseService {
      * @return 房源列表
      */
     List<House> getHousesByLandlordId(Long landlordId);
+
+    /**
+     * 分页获取房源列表（带条件查询）
+     *
+     * @param keyword  关键词
+     * @param type     户型
+     * @param minArea  最小面积
+     * @param maxArea  最大面积
+     * @param minPrice 最低价格
+     * @param maxPrice 最高价格
+     * @param address  地址
+     * @param page     页码
+     * @param pageSize 每页数量
+     * @return 房源分页信息
+     */
+    Page<House> getHouses(String keyword, String type, Double minArea, Double maxArea,
+                          Double minPrice, Double maxPrice, String address, int page, int pageSize);
 }

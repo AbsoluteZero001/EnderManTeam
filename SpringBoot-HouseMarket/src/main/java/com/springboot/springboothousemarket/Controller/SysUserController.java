@@ -1,6 +1,6 @@
 package com.springboot.springboothousemarket.Controller;
 
-import com.springboot.springboothousemarket.Entitiy.SysUser;
+import com.springboot.springboothousemarket.Entity.SysUser;
 import com.springboot.springboothousemarket.Service.SysUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,6 @@ import java.util.List;
 public class SysUserController {
 
     private final SysUserService sysUserService;
-
     public SysUserController(SysUserService sysUserService) {
         this.sysUserService = sysUserService;
     }
