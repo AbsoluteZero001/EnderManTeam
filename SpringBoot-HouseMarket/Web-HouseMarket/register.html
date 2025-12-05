@@ -193,12 +193,8 @@
             };
 
             try {
-                const res = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(userData)
-                });
-                const result = await res.json();
+                const response = await axios.post('/api/register', userData);
+                const result = response.data;
                 if (result.success) {
                     showMessage(result.message, 'success');
                     setTimeout(() => window.location.href = 'login.html', 1500);
@@ -212,5 +208,6 @@
         });
     });
 </script>
+<script src="assets/js/axios.js"></script>
 </body>
 </html>
