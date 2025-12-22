@@ -5,4 +5,5 @@ import com.it.pojo.User;
 public interface UserService {
     void show();
     void register(User user);
+    User login(String username, String password, String role);
 }

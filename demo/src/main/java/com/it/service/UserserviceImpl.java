@@ -24,4 +24,13 @@ public class UserserviceImpl implements UserService{
             throw new RuntimeException("注册失败");
         }
     }
+
+    @Override
+    public User login(String username, String password, String role) {
+        User user = userDao.login(username, password, role);
+        if (user == null) {
+            throw new RuntimeException("用户名、密码或角色错误");
+        }
+        return user;
+    }
 }
