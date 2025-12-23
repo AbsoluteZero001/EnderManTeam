@@ -66,11 +66,14 @@ public class SecurityConfig {
                         // 放行首页、静态资源、Swagger 文档
                         .requestMatchers(
                                 "/",
-                                "/index.html",
+                                "/admin.html",
+                                "/landlord.html",
+                                "tenant.html",
                                 "/register.html",
                                 "/login.html",
                                 "/HouseMarket/**",
                                 "/css/**",
+                                "/assets/**",
                                 "/js/**",
                                 "/images/**",
                                 "/favicon.ico",
