@@ -70,6 +70,7 @@ public class SecurityConfig {
                                 "/register.html",
                                 "/login.html",
                                 "/HouseMarket/**",
+                                "/assets/**",        // ⭐ 关键：放行 assets 目录
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
@@ -78,6 +79,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
+
                         ).permitAll()
                         // 其他请求必须认证
                         .anyRequest().authenticated()
