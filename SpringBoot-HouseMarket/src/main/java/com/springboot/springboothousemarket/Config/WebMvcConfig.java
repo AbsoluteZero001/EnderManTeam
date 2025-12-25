@@ -17,7 +17,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 添加资源处理器
-     *
      * @param registry 资源处理器注册表
      *                 <p>
      *                 此方法已被注释，因为项目采用纯后端API模式，
@@ -31,7 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     /**
      * 添加视图控制器
      * @param registry 视图控制器注册表
-     *
      * 此方法已被注释，因为项目采用纯后端API模式，
      * 不需要处理页面视图请求
      */
