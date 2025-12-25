@@ -327,4 +327,3 @@ function simulateDataLoading() {
         }, 1000);
     });
 }
-}
