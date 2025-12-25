@@ -184,3 +184,147 @@ function initModals() {
         }
     });
 }
+
+// 页面加载动画
+function initPageAnimations() {
+    // 为所有可动画的元素添加进入动画
+    const animatedElements = document.querySelectorAll('.house-card, .card, .stat-card, .form-container');
+
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            }
+        });
+    }, observerOptions);
+
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        observer.observe(el);
+    });
+}
+
+// 启动页面动画
+document.addEventListener('DOMContentLoaded', initPageAnimations);
+
+// 为按钮添加点击波纹效果
+function addRippleEffect(button) {
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+
+    ripple.style.width = ripple.style.height = `${size}px`;
+
+    // 计算点击位置
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    button.appendChild(ripple);
+
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+// 为所有按钮添加波纹效果
+function initRippleEffects() {
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            addRippleEffect(this);
+        });
+    });
+}
+
+// 初始化波纹效果
+document.addEventListener('DOMContentLoaded', initRippleEffects);
+
+// 添加波纹效果的CSS
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+    .btn {
+        position: relative;
+        overflow: hidden;
+    }
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.7);
+        transform: scale(0);
+        animation: ripple-animation 0.6s linear;
+        pointer-events: none;
+    }
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(rippleStyle);
+
+// 进度条功能
+function showProgressBar() {
+    // 检查是否已存在进度条
+    let progressBar = document.getElementById('progress-bar');
+
+    if (!progressBar) {
+        progressBar = document.createElement('div');
+        progressBar.id = 'progress-bar';
+        progressBar.className = 'progress-bar';
+        document.body.insertBefore(progressBar, document.body.firstChild);
+    }
+
+    // 重置进度条动画
+    progressBar.style.width = '0%';
+    progressBar.style.display = 'block';
+
+    // 模拟进度
+    let width = 0;
+    const interval = setInterval(() => {
+        if (width >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+            }, 300);
+        } else {
+            width += Math.random() * 15;
+            if (width > 100) width = 100;
+            progressBar.style.width = width + '%';
+        }
+    }, 100);
+}
+
+// 隐藏进度条
+function hideProgressBar() {
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+        progressBar.style.display = 'none';
+    }
+}
+
+// 模拟数据加载
+function simulateDataLoading() {
+    showProgressBar();
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            hideProgressBar();
+            resolve();
+        }, 1000);
+    });
+}
+}

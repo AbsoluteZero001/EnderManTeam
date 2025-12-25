@@ -5,16 +5,26 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>房屋租售系统 - 租客主页</title>
     <link href="css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="particles-container">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+<div class="decoration decoration-1"></div>
+<div class="decoration decoration-2"></div>
 <header>
     <div class="container">
         <nav>
             <div class="logo">房屋租售系统</div>
             <ul class="nav-links">
                 <li><a class="active" href="tenant.html">首页</a></li>
-                <li><a href="#" onclick="showSection('appointment')">预约记录</a></li>
-                <li><a href="#" onclick="showSection('favorites')">我的收藏</a></li>
+                <li><a href="#" onclick="showSection('appointment')">预约记录 <span class="badge">3</span></a></li>
+                <li><a href="#" onclick="showSection('favorites')">我的收藏 <span class="badge">5</span></a></li>
                 <li><a href="#" onclick="showSection('profile')">个人中心</a></li>
                 <li><span id="username"></span></li>
                 <li><a class="btn btn-secondary" href="#" id="logoutBtn">登出</a></li>
@@ -185,6 +195,9 @@
 
     // 初始化房源列表
     function initHouseList() {
+        // 显示加载进度条
+        showProgressBar();
+        
         // 模拟房源数据
         const mockHouses = [
             {
@@ -254,7 +267,7 @@
                 <div style="margin-top: 1rem; display: flex; gap: 1rem;">
                     <button class="btn" onclick="viewHouseDetail(${house.id})">查看详情</button>
                     <button class="btn btn-secondary" onclick="bookHouse(${house.id})">预约看房</button>
-                    <button class="btn btn-heart ${isFavorited ? 'favorited' : ''}" onclick="toggleFavorite(${house.id}, this)">${isFavorited ? '取消收藏' : '收藏'}</button>
+                    <button class="btn btn-heart ${isFavorited ? 'favorited' : ''}" onclick="toggleFavorite(${house.id}, this)" title="${isFavorited ? '取消收藏' : '收藏'}"></button>
                 </div>
             </div>
         </div>
@@ -264,6 +277,9 @@
 
     // 初始化收藏列表
     function initFavoritesList() {
+        // 显示加载进度条
+        showProgressBar();
+        
         // 获取收藏列表
         const favorites = getFavorites();
 
@@ -271,6 +287,12 @@
 
         if (favorites.length === 0) {
             favoritesList.innerHTML = '<p style="text-align: center; color: #666; margin: 2rem 0;">您还没有收藏任何房源</p>';
+
+            // 隐藏加载进度条
+            setTimeout(() => {
+                hideProgressBar();
+            }, 500);
+            
             return;
         }
 
@@ -289,11 +311,16 @@
                 <div style="margin-top: 1rem; display: flex; gap: 1rem;">
                     <button class="btn" onclick="viewHouseDetail(${house.id})">查看详情</button>
                     <button class="btn btn-secondary" onclick="bookHouse(${house.id})">预约看房</button>
-                    <button class="btn btn-heart favorited" onclick="toggleFavorite(${house.id}, this)">取消收藏</button>
+                    <button class="btn btn-heart favorited" onclick="toggleFavorite(${house.id}, this)" title="取消收藏"></button>
                 </div>
             </div>
         </div>
     `).join('');
+
+        // 隐藏加载进度条
+        setTimeout(() => {
+            hideProgressBar();
+        }, 500);
     }
 
     // 查看房源详情
