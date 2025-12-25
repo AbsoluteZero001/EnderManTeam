@@ -5,13 +5,19 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * JWT过滤器组件
@@ -21,6 +27,8 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+
+    private final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
     public JwtFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -35,38 +43,54 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        // 1. 请求中没有 JWT，直接放行（这是正常情况）
+        // 1. 如果请求中没有 JWT，直接放行（正常情况）
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
 
+        // 从请求头中提取 Token
         String jwtToken = authHeader.substring(7);
         String username;
 
         try {
+            // 2. 提取用户名
             username = jwtUtil.extractUsername(jwtToken);
+
+            // 3. 检查 Token 是否过期
+            if (username != null && jwtUtil.isTokenExpired(jwtToken)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // 返回 401
+                response.getWriter().write("Token has expired");
+                return;
+            }
         } catch (Exception e) {
-            // Token 非法 / 过期，不是系统错误，不打 WARN
-            chain.doFilter(request, response);
+            // Token 非法 / 解析失败
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // 返回 401
+            response.getWriter().write("Invalid Token: " + e.getMessage());
             return;
         }
 
-        // 2. 已解析出用户名，且当前未认证，才注入认证信息
-        if (username != null &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
+        // 4. 如果用户名不为空，并且当前没有认证，才注入认证信息
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            // 从 JWT 中提取角色信息，并转换为 GrantedAuthority 对象
+            List<GrantedAuthority> authorities = jwtUtil.extractRoles(jwtToken).stream()
+                    .map(role -> new SimpleGrantedAuthority(role))  // 转换为 GrantedAuthority
+                    .collect(Collectors.toList());
+
+            // 创建认证信息对象
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(username, null, null);
+                    new UsernamePasswordAuthenticationToken(username, null, authorities);
 
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-
+            // 设置认证信息到 Spring Security 上下文
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 打印日志
+            logger.info("Authenticated user: " + username);
         }
 
+        // 执行后续的过滤器链
         chain.doFilter(request, response);
     }
 }
-

@@ -57,7 +57,10 @@ public class SecurityConfig {
                 // 1. 禁用 CSRF（前后端分离项目一般禁用）
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // 2. 配置请求授权规则
+                // 2. 配置 CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                // 3. 配置请求授权规则
                 .authorizeHttpRequests(auth -> auth
                         // 放行注册、登录接口
                         .requestMatchers("/api/v1/auth/**").permitAll()
@@ -81,20 +84,33 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
-
                         ).permitAll()
+                        // 允许访问 /api/houses
+                        .requestMatchers("/api/houses/**").permitAll()  // 新增的放行路径
                         // 其他请求必须认证
                         .anyRequest().authenticated()
                 )
 
-                // 3. 配置会话管理为无状态
+                // 4. 配置会话管理为无状态
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // 4. 在用户名密码认证过滤器之前加入 JWT 过滤器
+        // 5. 在用户名密码认证过滤器之前加入 JWT 过滤器
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // CORS 配置源
+    private org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
+        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

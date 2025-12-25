@@ -2,6 +2,7 @@ package com.springboot.springboothousemarket.Controller;
 
 import com.springboot.springboothousemarket.Service.CaptchaService;
 import com.springboot.springboothousemarket.Service.RegisterRequestService;
+import com.springboot.springboothousemarket.Util.JwtUtil;
 import com.springboot.springboothousemarket.dto.LoginRequest;
 import com.springboot.springboothousemarket.dto.LoginResponse;
 import com.springboot.springboothousemarket.dto.RegisterRequest;
@@ -20,10 +21,12 @@ public class RegisterRequestController {
 
     private final RegisterRequestService service;
     private final CaptchaService captchaService;
+    private final JwtUtil jwtUtil;
 
-    public RegisterRequestController(RegisterRequestService service, CaptchaService captchaService) {
+    public RegisterRequestController(RegisterRequestService service, CaptchaService captchaService, JwtUtil jwtUtil) {
         this.service = service;
         this.captchaService = captchaService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -46,7 +49,7 @@ public class RegisterRequestController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
             RegisterRequest user = service.login(request.getUsername(), request.getPassword(), request.getRole());
-            String token = "token_" + System.currentTimeMillis();
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
             return ResponseEntity.ok(new LoginResponse(200, "登录成功", user, token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new LoginResponse(400, e.getMessage(), null, null));

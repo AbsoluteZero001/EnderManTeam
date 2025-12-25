@@ -5,7 +5,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 /**
  * WebMvcConfig类
  * 用于配置Spring MVC的相关设置
@@ -14,6 +13,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration  // 标记此类为配置类，相当于XML配置文件中的<beans>
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    // CORS 配置已移至 SecurityConfig 和 CorsConfig 类中
+    // 保留此文件用于其他 MVC 配置
 
     /**
      * 添加资源处理器

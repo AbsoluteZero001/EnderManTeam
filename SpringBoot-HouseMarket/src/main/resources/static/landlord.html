@@ -319,7 +319,7 @@
                 <tr>
                     <td>${house.id}</td>
                     <td>${house.title}</td>
-                    <td>${house.houseType}</td>
+                    <td>${house.type}</td>
                     <td>${house.area}㎡</td>
                     <td>¥${house.price}/月</td>
                     <td>${house.address}</td>
@@ -416,19 +416,16 @@
             // 填充表单数据
             document.getElementById('editHouseId').value = house.id;
             document.getElementById('editHouseTitle').value = house.title;
-            document.getElementById('editHouseType').value = house.houseType;
+            document.getElementById('editHouseType').value = house.type;
             document.getElementById('editHouseArea').value = house.area;
             document.getElementById('editHousePrice').value = house.price;
             document.getElementById('editHouseAddress').value = house.address;
             document.getElementById('editHouseDescription').value = house.description || '';
             
             // 如果有图片，显示预览
-            if (house.images) {
-                const images = JSON.parse(house.images);
-                if (images.length > 0) {
-                    document.getElementById('editImagePreview').src = images[0];
-                    document.getElementById('editImagePreview').style.display = 'block';
-                }
+            if (house.image) {
+                document.getElementById('editImagePreview').src = house.image;
+                document.getElementById('editImagePreview').style.display = 'block';
             }
             
             showModal('editHouseModal');
@@ -480,14 +477,22 @@
             // 构建请求数据
             const houseData = {
                 title: formData.get('title'),
-                houseType: formData.get('type'),
+                type: formData.get('type'),
                 area: parseFloat(formData.get('area')),
                 price: parseFloat(formData.get('price')),
                 address: formData.get('address'),
                 description: formData.get('description'),
-                status: 0, // 待审核
-                images: JSON.stringify([]) // 暂时空数组，后续可扩展图片上传
+                image: '' // 添加图片字段
             };
+
+            // 如果有图片文件，处理图片上传
+            const imageFile = document.getElementById('houseImage').files[0];
+            if (imageFile) {
+                // 这里可以实现图片上传到服务器的逻辑
+                // 暂时只处理图片预览，实际图片上传需要后端支持
+                const imageUrl = URL.createObjectURL(imageFile);
+                houseData.image = imageUrl; // 设置图片URL
+            }
             
             const response = await fetch('/api/houses', {
                 method: 'POST',
@@ -528,12 +533,22 @@
             // 构建请求数据
             const houseData = {
                 title: formData.get('title'),
-                houseType: formData.get('type'),
+                type: formData.get('type'),
                 area: parseFloat(formData.get('area')),
                 price: parseFloat(formData.get('price')),
                 address: formData.get('address'),
-                description: formData.get('description')
+                description: formData.get('description'),
+                image: '' // 添加图片字段
             };
+
+            // 如果有图片文件，处理图片上传
+            const imageFile = document.getElementById('editHouseImage').files[0];
+            if (imageFile) {
+                // 这里可以实现图片上传到服务器的逻辑
+                // 暂时只处理图片预览，实际图片上传需要后端支持
+                const imageUrl = URL.createObjectURL(imageFile);
+                houseData.image = imageUrl; // 设置图片URL
+            }
             
             const response = await fetch(`/api/houses/${houseId}`, {
                 method: 'PUT',
