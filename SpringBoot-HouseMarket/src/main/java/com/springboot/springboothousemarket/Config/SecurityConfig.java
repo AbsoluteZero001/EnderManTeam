@@ -75,21 +75,21 @@ public class SecurityConfig {
                                 "/register.html",
                                 "/tenant.html",
                                 "/HouseMarket/**",
-                                "/assets/**",        // ⭐ 关键：放行 assets 目录
+                                "/assets/**", // ⭐ 关键：放行 assets 目录
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
-                                "/favicon.ico",      // ⭐ 确保 favicon.ico 请求不被拦截
+                                "/uploads/**", // ⭐ 关键：放行上传的图片资源
+                                "/favicon.ico", // ⭐ 确保 favicon.ico 请求不被拦截
                                 "/webjars/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()
+                                "/v3/api-docs/**")
+                        .permitAll()
                         // 允许访问 /api/houses
-                        .requestMatchers("/api/houses/**").permitAll()  // 新增的放行路径
+                        .requestMatchers("/api/houses/**").permitAll() // 新增的放行路径
                         // 其他请求必须认证
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
 
                 // 4. 配置会话管理为无状态
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

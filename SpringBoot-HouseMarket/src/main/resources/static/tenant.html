@@ -282,16 +282,20 @@
                 houseList.innerHTML = houses.map(house => {
                     const isFavorited = favoriteHouseIds.includes(house.id);
                     // 处理图片显示
-                    let imageUrl = 'https://picsum.photos/seed/house' + house.id + '/300/200';
+                    let imageUrl = '';
                     if (house.image) {
                         try {
                             const images = JSON.parse(house.image);
-                            if (images.length > 0) {
+                            if (images.length > 0 && images[0]) {
                                 imageUrl = images[0];
                             }
                         } catch (e) {
                             console.error('解析图片失败:', e);
                         }
+                    }
+                    // 如果没有图片URL，使用默认图片
+                    if (!imageUrl) {
+                        imageUrl = 'https://picsum.photos/seed/house' + house.id + '/300/200';
                     }
 
                     return `
@@ -342,16 +346,20 @@
                 favoritesList.innerHTML = favorites.map(fav => {
                     const house = fav.house;
                     // 处理图片显示
-                    let imageUrl = 'https://picsum.photos/seed/house' + house.id + '/300/200';
+                    let imageUrl = '';
                     if (house.image) {
                         try {
                             const images = JSON.parse(house.image);
-                            if (images.length > 0) {
+                            if (images.length > 0 && images[0]) {
                                 imageUrl = images[0];
                             }
                         } catch (e) {
                             console.error('解析图片失败:', e);
                         }
+                    }
+                    // 如果没有图片URL，使用默认图片
+                    if (!imageUrl) {
+                        imageUrl = 'https://picsum.photos/seed/house' + house.id + '/300/200';
                     }
 
                     return `

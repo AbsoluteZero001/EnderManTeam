@@ -108,8 +108,22 @@ function initImagePreview(inputId, previewId) {
                     preview.src = event.target.result;
                     preview.style.display = 'block';
                 };
+                reader.onerror = (event) => {
+                    console.error('图片读取失败:', event.target.error);
+                    alert('图片读取失败，请重试');
+                };
                 reader.readAsDataURL(file);
+            } else {
+                // 用户取消选择图片时，隐藏预览
+                preview.style.display = 'none';
+                preview.src = '';
             }
+        });
+
+        // 添加点击事件，确保每次点击都能触发change事件
+        input.addEventListener('click', () => {
+            // 重置input值，确保同一文件也能触发change事件
+            input.value = '';
         });
     }
 }

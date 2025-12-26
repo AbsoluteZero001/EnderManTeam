@@ -215,8 +215,8 @@
             }
 
             // 如果没有图片，使用默认图片
-            if (images.length === 0) {
-                images.push(`https://picsum.photos/seed/house${houseId}/800/600`);
+            if (!images || images.length === 0) {
+                images = [`https://picsum.photos/seed/house${houseId}/800/600`];
             }
 
             // 设置主图

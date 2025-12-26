@@ -44,8 +44,8 @@ public class HousesServiceImpl extends ServiceImpl<HousesMapper, Houses> impleme
             house.setDescription("暂无描述");
         }
         // 确保图片字段有值，避免检查约束违反
-        if (house.getImages() == null || house.getImages().isEmpty()) {
-            house.setImages("[]"); // 设置空JSON数组作为默认值
+        if (house.getImage() == null || house.getImage().isEmpty()) {
+            house.setImage("[]"); // 设置空JSON数组作为默认值
         }
         // 保存房源
         save(house);

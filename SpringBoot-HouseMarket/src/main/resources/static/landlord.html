@@ -351,7 +351,7 @@
             } else {
                 houseList.innerHTML = houses.map(house => {
                     // 处理图片显示
-                    let imageUrl = 'https://picsum.photos/seed/house' + house.id + '/400/300';
+                    let imageUrl = '';
                     if (house.image) {
                         try {
                             const imagesArray = JSON.parse(house.image);
@@ -361,6 +361,10 @@
                         } catch (e) {
                             console.error('解析图片数组失败:', e);
                         }
+                    }
+                    // 如果没有图片URL，使用默认图片
+                    if (!imageUrl) {
+                        imageUrl = 'https://picsum.photos/seed/house' + house.id + '/400/300';
                     }
 
                     // 处理描述显示，限制长度
@@ -504,6 +508,9 @@
             document.getElementById('editHouseAddress').value = house.address;
             document.getElementById('editHouseDescription').value = house.description || '';
 
+            // 重置文件输入
+            document.getElementById('editHouseImage').value = '';
+
             // 如果有图片，显示预览
             if (house.image) {
                 try {
@@ -511,10 +518,18 @@
                     if (imagesArray && imagesArray.length > 0) {
                         document.getElementById('editImagePreview').src = imagesArray[0];
                         document.getElementById('editImagePreview').style.display = 'block';
+                    } else {
+                        document.getElementById('editImagePreview').style.display = 'none';
+                        document.getElementById('editImagePreview').src = '';
                     }
                 } catch (e) {
                     console.error('解析图片数组失败:', e);
+                    document.getElementById('editImagePreview').style.display = 'none';
+                    document.getElementById('editImagePreview').src = '';
                 }
+            } else {
+                document.getElementById('editImagePreview').style.display = 'none';
+                document.getElementById('editImagePreview').src = '';
             }
 
             showModal('editHouseModal');
@@ -793,18 +808,26 @@
                     body: imageFormData
                 });
 
+                console.log('图片上传响应状态:', imageResponse.status);
+
                 if (imageResponse.ok) {
                     const imageUrl = await imageResponse.text(); // 后端直接返回URL字符串
+                    console.log('图片上传成功，URL:', imageUrl);
                     houseData.image = JSON.stringify([imageUrl]); // 将图片URL转换为JSON数组
                 } else {
                     const errorText = await imageResponse.text().catch(() => '未知错误');
+                    console.error('图片上传失败:', errorText);
                     throw new Error(`图片上传失败: ${errorText}`);
                 }
             } else {
                 // 如果没有新图片，保持原有图片
+                console.log('没有选择新图片，使用原有图片');
                 const existingHouse = await getHouseDetails(houseId);
                 houseData.image = existingHouse.image || '[]';
+                console.log('原有图片数据:', houseData.image);
             }
+
+            console.log('准备发送的房源数据:', houseData);
 
             const response = await fetch(`/api/houses/${houseId}`, {
                 method: 'PUT',
@@ -815,18 +838,34 @@
                 body: JSON.stringify(houseData)
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error('更新房源失败: ' + (errorData.message || '未知错误'));
+            // 记录完整响应
+            const responseText = await response.text();
+            console.log('更新房源响应状态:', response.status);
+            console.log('更新房源响应内容:', responseText);
+
+            let responseData;
+            try {
+                responseData = JSON.parse(responseText);
+                console.log('解析后的更新响应:', responseData);
+            } catch (parseError) {
+                console.error('更新响应解析失败:', parseError);
+                throw new Error('更新房源失败: 服务器返回无效的JSON格式');
             }
 
-            showMessage('更新房源成功', 'success');
-            hideModal('editHouseModal');
-            // 清空图片预览
-            document.getElementById('editImagePreview').style.display = 'none';
-            document.getElementById('editImagePreview').src = '';
-            const user = JSON.parse(localStorage.getItem('user'));
-            initHouseList(user.id);
+            if (response.ok && responseData.success) {
+                showMessage('更新房源成功', 'success');
+                hideModal('editHouseModal');
+                // 清空图片预览
+                document.getElementById('editImagePreview').style.display = 'none';
+                document.getElementById('editImagePreview').src = '';
+                const user = JSON.parse(localStorage.getItem('user'));
+                initHouseList(user.id);
+            } else {
+                // 直接显示错误信息
+                const errorMsg = responseData.message || responseData.error || '未知错误';
+                console.error('更新房源失败:', errorMsg);
+                throw new Error(`更新房源失败: ${errorMsg}`);
+            }
         } catch (error) {
             console.error('更新房源失败:', error);
             // 移除重复的错误前缀

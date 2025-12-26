@@ -40,7 +40,7 @@ public class Houses {
 
     @Schema(description = "图片地址")
     @TableField("image")
-    private String images;
+    private String image;
 
     @Schema(description = "房东ID")
     @TableField("landlord_id")
