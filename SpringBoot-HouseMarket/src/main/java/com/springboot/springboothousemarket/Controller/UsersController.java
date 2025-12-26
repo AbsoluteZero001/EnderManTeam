@@ -10,10 +10,11 @@ import java.util.List;
 @Tag(name = "用户信息API")
 @RequestMapping("/user")
 @RestController
-public class SysUserController {
+public class UsersController {
 
     private final SysUserService sysUserService;
-    public SysUserController(SysUserService sysUserService) {
+
+    public UsersController(SysUserService sysUserService) {
         this.sysUserService = sysUserService;
     }
 
