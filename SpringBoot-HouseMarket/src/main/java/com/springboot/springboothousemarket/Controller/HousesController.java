@@ -20,11 +20,11 @@ import java.util.Map;
 public class HousesController {
 
     private final HousesService houseService;
-    private final UsersService sysUserService;
+    private final UsersService UsersService;
 
-    public HousesController(HousesService houseService, UsersService sysUserService) {
+    public HousesController(HousesService houseService, UsersService UsersService) {
         this.houseService = houseService;
-        this.sysUserService = sysUserService;
+        this.UsersService = UsersService;
     }
 
     /**
@@ -166,7 +166,7 @@ public class HousesController {
             return null;
         }
 
-        Users user = sysUserService.getUserByUsername(authentication.getName());
+        Users user = UsersService.getUserByUsername(authentication.getName());
         return user != null ? user.getId() : null;
     }
 }
