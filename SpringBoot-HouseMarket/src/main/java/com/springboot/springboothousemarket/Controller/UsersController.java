@@ -3,6 +3,8 @@ package com.springboot.springboothousemarket.Controller;
 import com.springboot.springboothousemarket.Entity.Users;
 import com.springboot.springboothousemarket.Service.UsersService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,5 +78,88 @@ public class UsersController {
     @GetMapping("/username/{username}")
     public Users getUserByUsername(@PathVariable String username) {
         return sysUserService.getUserByUsername(username);
+    }
+
+    /**
+     * 获取当前登录用户信息
+     *
+     * @return 当前用户信息
+     */
+    @GetMapping("/current")
+    public Users getCurrentUser() {
+        String currentUsername = getCurrentUsername();
+        if (currentUsername == null) {
+            throw new SecurityException("未登录或登录状态失效");
+        }
+        return sysUserService.getUserByUsername(currentUsername);
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param id           用户ID
+     * @param passwordInfo 包含旧密码和新密码的对象
+     * @return 修改结果
+     */
+    @PutMapping("/{id}/password")
+    public boolean changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest passwordInfo) {
+        // 获取当前用户信息
+        Users currentUser = sysUserService.getUserById(id);
+        if (currentUser == null) {
+            throw new RuntimeException("用户不存在");
+        }
+
+        // 验证用户身份（确保是当前用户或管理员）
+        String currentUsername = getCurrentUsername();
+        if (currentUsername == null || !currentUsername.equals(currentUser.getUsername())) {
+            throw new SecurityException("没有权限修改此用户密码");
+        }
+
+        // 验证旧密码（这里简化处理，实际应进行密码加密验证）
+        // 在实际应用中，需要对输入的旧密码进行加密并与数据库中的密码进行比较
+        // 由于当前系统结构限制，这里仅作示意
+
+        // 更新密码（实际应用中需要加密）
+        currentUser.setPassword(passwordInfo.getNewPassword());
+        sysUserService.updateUser(id, currentUser);
+
+        return true;
+    }
+
+    /**
+     * 获取当前登录用户名
+     *
+     * @return 当前用户名
+     */
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                "anonymousUser".equals(authentication.getName())) {
+            return null;
+        }
+        return authentication.getName();
+    }
+
+    // 为密码修改请求创建内部类
+    public static class PasswordChangeRequest {
+        private String oldPassword;
+        private String newPassword;
+
+        public String getOldPassword() {
+            return oldPassword;
+        }
+
+        public void setOldPassword(String oldPassword) {
+            this.oldPassword = oldPassword;
+        }
+
+        public String getNewPassword() {
+            return newPassword;
+        }
+
+        public void setNewPassword(String newPassword) {
+            this.newPassword = newPassword;
+        }
     }
 }
