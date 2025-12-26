@@ -7,6 +7,7 @@ import com.springboot.springboothousemarket.Entity.Houses;
 import com.springboot.springboothousemarket.Mapper.HousesMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,13 +17,37 @@ public class HousesServiceImpl extends ServiceImpl<HousesMapper, Houses> impleme
     @Override
     public Houses createHouse(Houses house, Long landlordId) {
         house.setLandlordId(landlordId); // 绑定房东ID
-        // 设置默认状态为可用
-        house.setStatus("available");
+        // 设置默认状态，根据数据库约束修改为正常状态
+        house.setStatus("NORMAL");
         // 设置创建和更新时间
         house.setCreateTime(LocalDateTime.now());
         house.setUpdateTime(LocalDateTime.now());
         // 设置未删除状态
         house.setIsDeleted(0);
+        // 确保必填字段都有值
+        if (house.getTitle() == null || house.getTitle().isEmpty()) {
+            house.setTitle("未命名房源");
+        }
+        if (house.getType() == null || house.getType().isEmpty()) {
+            house.setType("平层");
+        }
+        if (house.getArea() == null) {
+            house.setArea(BigDecimal.ZERO);
+        }
+        if (house.getPrice() == null) {
+            house.setPrice(BigDecimal.ZERO);
+        }
+        if (house.getAddress() == null || house.getAddress().isEmpty()) {
+            house.setAddress("未知地址");
+        }
+        if (house.getDescription() == null || house.getDescription().isEmpty()) {
+            house.setDescription("暂无描述");
+        }
+        // 确保图片字段有值，避免检查约束违反
+        if (house.getImages() == null || house.getImages().isEmpty()) {
+            house.setImages("[]"); // 设置空JSON数组作为默认值
+        }
+        // 保存房源
         save(house);
         return house;
     }
