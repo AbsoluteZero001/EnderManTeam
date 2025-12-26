@@ -79,7 +79,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
-                                "/favicon.ico",
+                                "/favicon.ico",      // ⭐ 确保 favicon.ico 请求不被拦截
                                 "/webjars/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
