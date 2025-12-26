@@ -24,13 +24,13 @@ public class RegisterRequestController {
     private final RegisterRequestService service;
     private final CaptchaService captchaService;
     private final JwtUtil jwtUtil;
-    private final UsersService sysUserService;
+    private final UsersService UsersService;
 
-    public RegisterRequestController(RegisterRequestService service, CaptchaService captchaService, JwtUtil jwtUtil, UsersService sysUserService) {
+    public RegisterRequestController(RegisterRequestService service, CaptchaService captchaService, JwtUtil jwtUtil, UsersService UsersService) {
         this.service = service;
         this.captchaService = captchaService;
         this.jwtUtil = jwtUtil;
-        this.sysUserService = sysUserService;
+        this.UsersService = UsersService;
     }
 
     @PostMapping("/register")
@@ -59,7 +59,7 @@ public class RegisterRequestController {
             }
 
             // 获取完整的用户信息（包含ID）
-            Users fullUser = sysUserService.getUserByUsername(request.getUsername());
+            Users fullUser = UsersService.getUserByUsername(request.getUsername());
             if (fullUser == null) {
                 return ResponseEntity.badRequest().body(new LoginResponse(400, "用户信息不存在", null, null));
             }
