@@ -352,9 +352,9 @@
                 houseList.innerHTML = houses.map(house => {
                     // 处理图片显示
                     let imageUrl = 'https://picsum.photos/seed/house' + house.id + '/400/300';
-                    if (house.images) {
+                    if (house.image) {
                         try {
-                            const imagesArray = JSON.parse(house.images);
+                            const imagesArray = JSON.parse(house.image);
                             if (imagesArray && imagesArray.length > 0 && imagesArray[0]) {
                                 imageUrl = imagesArray[0];
                             }
@@ -505,9 +505,9 @@
             document.getElementById('editHouseDescription').value = house.description || '';
 
             // 如果有图片，显示预览
-            if (house.images) {
+            if (house.image) {
                 try {
-                    const imagesArray = JSON.parse(house.images);
+                    const imagesArray = JSON.parse(house.image);
                     if (imagesArray && imagesArray.length > 0) {
                         document.getElementById('editImagePreview').src = imagesArray[0];
                         document.getElementById('editImagePreview').style.display = 'block';
@@ -652,7 +652,7 @@
                 price: parseFloat(formData.get('price')),
                 address: formData.get('address'),
                 description: formData.get('description'),
-                images: '[]' // 添加图片字段，默认空JSON数组
+                image: '[]' // 添加图片字段，默认空JSON数组
             };
 
             // 如果有图片文件，处理图片上传
@@ -684,14 +684,14 @@
 
                 if (imageResponse.ok) {
                     const imageUrl = await imageResponse.text(); // 后端直接返回URL字符串
-                    houseData.images = JSON.stringify([imageUrl]); // 将图片URL转换为JSON数组
+                    houseData.image = JSON.stringify([imageUrl]); // 将图片URL转换为JSON数组
                 } else {
                     const errorText = await imageResponse.text().catch(() => '未知错误');
                     throw new Error(`图片上传失败: ${errorText}`);
                 }
             } else {
                 // 如果没有图片文件，设置为空数组
-                houseData.images = '[]';
+                houseData.image = '[]';
             }
 
             // 发送房源数据到后端
@@ -763,7 +763,7 @@
                 price: parseFloat(formData.get('price')),
                 address: formData.get('address'),
                 description: formData.get('description'),
-                images: '[]' // 添加图片字段，默认空JSON数组
+                image: '[]' // 添加图片字段，默认空JSON数组
             };
 
             // 如果有图片文件，处理图片上传
@@ -795,7 +795,7 @@
 
                 if (imageResponse.ok) {
                     const imageUrl = await imageResponse.text(); // 后端直接返回URL字符串
-                    houseData.images = JSON.stringify([imageUrl]); // 将图片URL转换为JSON数组
+                    houseData.image = JSON.stringify([imageUrl]); // 将图片URL转换为JSON数组
                 } else {
                     const errorText = await imageResponse.text().catch(() => '未知错误');
                     throw new Error(`图片上传失败: ${errorText}`);
@@ -803,7 +803,7 @@
             } else {
                 // 如果没有新图片，保持原有图片
                 const existingHouse = await getHouseDetails(houseId);
-                houseData.images = existingHouse.images || '[]';
+                houseData.image = existingHouse.image || '[]';
             }
 
             const response = await fetch(`/api/houses/${houseId}`, {

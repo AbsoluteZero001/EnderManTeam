@@ -283,9 +283,9 @@
                     const isFavorited = favoriteHouseIds.includes(house.id);
                     // 处理图片显示
                     let imageUrl = 'https://picsum.photos/seed/house' + house.id + '/300/200';
-                    if (house.images) {
+                    if (house.image) {
                         try {
-                            const images = JSON.parse(house.images);
+                            const images = JSON.parse(house.image);
                             if (images.length > 0) {
                                 imageUrl = images[0];
                             }
@@ -343,9 +343,9 @@
                     const house = fav.house;
                     // 处理图片显示
                     let imageUrl = 'https://picsum.photos/seed/house' + house.id + '/300/200';
-                    if (house.images) {
+                    if (house.image) {
                         try {
-                            const images = JSON.parse(house.images);
+                            const images = JSON.parse(house.image);
                             if (images.length > 0) {
                                 imageUrl = images[0];
                             }
