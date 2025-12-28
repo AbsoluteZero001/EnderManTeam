@@ -79,7 +79,7 @@ public class FavoritesController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("data", favorites);
+        response.put("data", data);
 
         return response;
     }

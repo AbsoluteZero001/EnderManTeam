@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 "/login.html",
                                 "/register.html",
                                 "/tenant.html",
+                                "/house-detail.html",
                                 "/HouseMarket/**",
                                 "/assets/**", // ⭐ 关键：放行 assets 目录
                                 "/css/**",
@@ -86,8 +87,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**")
                         .permitAll()
-                        // 允许访问 /api/houses
+                        // 允许访问 /api/houses 和 /api/appointments
                         .requestMatchers("/api/houses/**").permitAll() // 新增的放行路径
+                        .requestMatchers("/api/appointments/**").permitAll() // 新增的放行路径
+                        // 允许访问 /api/favorites
+                        .requestMatchers("/api/favorites/**").permitAll() // 新增的放行路径
                         // 其他请求必须认证
                         .anyRequest().authenticated())
 

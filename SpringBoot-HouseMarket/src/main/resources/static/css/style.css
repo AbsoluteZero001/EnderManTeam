@@ -1209,14 +1209,19 @@ nav {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  min-width: 40px;
+  min-width: 50px;
   min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  padding: 0;
-  text-indent: -9999px; /* 隐藏文本 */
+  padding: 0 1rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-heart::before {
@@ -1264,6 +1269,7 @@ nav {
   transform: translate(-50%, -50%);
   transition: all 0.3s ease;
   z-index: 2;
+  color: white;
 }
 
 .btn-heart.favorited::after {
