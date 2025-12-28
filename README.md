@@ -223,8 +223,8 @@ http://localhost:8082/swagger-ui.html
 
 如有问题或建议，欢迎通过以下方式联系：
 
-- GitHub Issues: https://github.com/AbsoluteZero001/HouseMarket/issues
-- Email: absolutezero.cold200@simplelogin.com
+- GitHub Issues:https://github.com/AbsoluteZero001/HouseMarket/issues
+- Email:absolutezero.cold200@simplelogin.com
 
 ## 📋 更新日志
 
