@@ -24,11 +24,14 @@
             <nav>
                 <div class="logo">房屋租售系统</div>
                 <ul class="nav-links">
-                    <li><a class="active" href="tenant.html">首页</a></li>
-                    <li><a href="#" onclick="showSection('appointment')">预约记录</a></li>
-                    <li><a href="#" onclick="showSection('favorites')">我的收藏</a></li>
-                    <li><a href="#" onclick="showSection('profile')">个人中心</a></li>
-                    <li><span id="username"></span></li>
+                    <li><a class="nav-item active" href="tenant.html">首页</a></li>
+                    <li><a class="nav-item" href="#" onclick="showSection('appointment')">预约记录</a></li>
+                    <li><a class="nav-item" href="#" onclick="showSection('favorites')">我的收藏</a></li>
+                    <li class="user-info" onclick="showModal('profileModal')" style="cursor: pointer;">
+                        <span class="username-text">欢迎, <strong id="username"></strong></span>
+                        <span class="role-badge" id="userRole"></span>
+                        <i class="fas fa-caret-down" style="margin-left: 5px;"></i>
+                    </li>
                     <li><a class="btn btn-secondary" href="#" id="logoutBtn">登出</a></li>
                 </ul>
             </nav>
@@ -162,38 +165,41 @@
             </div>
         </section>
 
-        <!-- 个人中心 -->
-        <section class="section" id="profile" style="display: none;">
-            <h2 style="margin: 2rem 0;">个人中心</h2>
+        <!-- 个人中心模态框 -->
+        <div class="modal" id="profileModal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3 style="margin-bottom: 1.5rem;">个人中心</h3>
+                <div class="form-container">
+                    <h4>个人信息</h4>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileUsername">用户名</label>
+                            <input disabled id="profileUsername" name="username" type="text">
+                        </div>
 
-            <div class="form-container">
-                <h3>个人信息</h3>
-                <form id="profileForm">
-                    <div class="form-group">
-                        <label for="profileUsername">用户名</label>
-                        <input disabled id="profileUsername" name="username" type="text">
-                    </div>
+                        <div class="form-group">
+                            <label for="profileRole">角色</label>
+                            <input disabled id="profileRole" name="role" type="text">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="profileRole">角色</label>
-                        <input disabled id="profileRole" name="role" type="text">
-                    </div>
+                        <div class="form-group">
+                            <label for="newPassword">新密码</label>
+                            <input id="newPassword" maxlength="20" minlength="6" name="newPassword"
+                                placeholder="不修改密码请留空" type="password">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="newPassword">新密码</label>
-                        <input id="newPassword" maxlength="20" minlength="6" name="newPassword" placeholder="不修改密码请留空"
-                            type="password">
-                    </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">确认新密码</label>
+                            <input id="confirmNewPassword" name="confirmNewPassword" placeholder="请再次输入新密码"
+                                type="password">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="confirmNewPassword">确认新密码</label>
-                        <input id="confirmNewPassword" name="confirmNewPassword" placeholder="请再次输入新密码" type="password">
-                    </div>
-
-                    <button class="btn" type="submit">保存修改</button>
-                </form>
+                        <button class="btn" type="submit">保存修改</button>
+                    </form>
+                </div>
             </div>
-        </section>
+        </div>
     </div>
 
     <script src="assets/js/utils.js"></script>
@@ -208,6 +214,7 @@
                     document.getElementById('username').textContent = user.username;
                     document.getElementById('profileUsername').value = user.username;
                     document.getElementById('profileRole').value = user.role;
+                    document.getElementById('userRole').textContent = user.role;
                 } else {
                     // 用户信息无效
                     console.error("用户 ID 无效或不存在");
@@ -624,6 +631,9 @@
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
             initTenantPage();
+
+            // 初始化模态框
+            initModals();
 
             // 登出按钮事件
             const logoutBtn = document.getElementById('logoutBtn');
