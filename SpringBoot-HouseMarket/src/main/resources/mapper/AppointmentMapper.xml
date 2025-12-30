@@ -59,4 +59,28 @@
         a.create_time DESC
     </select>
 
+    <!-- 自定义查询方法，根据房东ID和状态获取收到的预约记录，带关联信息 -->
+    <select id="selectAppointmentsByLandlordIdWithDetails" resultMap="appointmentWithDetailsResultMap">
+        SELECT
+        a.*,
+        h.id AS h_id, h.title AS h_title,
+        tu.id AS t_id, tu.username AS t_username,
+        lu.id AS l_id, lu.username AS l_username
+        FROM
+        appointments a
+        LEFT JOIN
+        houses h ON a.house_id = h.id
+        LEFT JOIN
+        users tu ON a.tenant_id = tu.id
+        LEFT JOIN
+        users lu ON a.landlord_id = lu.id
+        WHERE
+        a.landlord_id = #{landlordId}
+        <if test="status != null and status != ''">
+            AND a.status = #{status}
+        </if>
+        ORDER BY
+        a.create_time DESC
+    </select>
+
 </mapper>

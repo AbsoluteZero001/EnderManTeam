@@ -23,4 +23,14 @@ public interface AppointmentMapper extends BaseMapper<Appointment> {
      * @return 预约记录列表
      */
     List<Appointment> selectAppointmentsWithDetails(@Param("userId") Long userId, @Param("status") String status);
+
+    /**
+     * 根据房东ID和状态获取收到的预约记录，带关联信息
+     *
+     * @param landlordId 房东ID
+     * @param status     预约状态
+     * @return 预约记录列表
+     */
+    List<Appointment> selectAppointmentsByLandlordIdWithDetails(@Param("landlordId") Long landlordId,
+                                                                @Param("status") String status);
 }

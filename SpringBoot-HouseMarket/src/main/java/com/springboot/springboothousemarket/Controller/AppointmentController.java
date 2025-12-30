@@ -41,6 +41,14 @@ public class AppointmentController {
     @PostMapping
     public Map<String, Object> createAppointment(@RequestBody Appointment appointment,
                                                  @AuthenticationPrincipal Users currentUser) {
+        // 验证当前登录用户是否为租客
+        if (!"TENANT".equals(currentUser.getRole())) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "只有租客才能创建预约");
+            return response;
+        }
+
         // 设置租客ID为当前登录用户ID
         appointment.setTenantId(currentUser.getId());
 
@@ -52,7 +60,17 @@ public class AppointmentController {
             response.put("message", "房源不存在");
             return response;
         }
-        appointment.setLandlordId(house.getLandlordId());
+
+        Long landlordId = house.getLandlordId();
+        appointment.setLandlordId(landlordId);
+
+        // 验证租客不能预约自己的房源
+        if (currentUser.getId().equals(landlordId)) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "不能预约自己的房源");
+            return response;
+        }
 
         // 验证必填字段
         if (appointment.getTime() == null || appointment.getLocation() == null) {
@@ -99,9 +117,19 @@ public class AppointmentController {
     @GetMapping
     public Map<String, Object> getAllAppointments(@RequestParam(required = false) String status,
                                                   @AuthenticationPrincipal Users currentUser) {
-        // 获取当前登录用户的预约列表
-        List<Appointment> appointments = appointmentService.getAppointmentsByUserIdAndStatus(currentUser.getId(),
-                status);
+        List<Appointment> appointments;
+
+        // 根据用户角色返回不同的预约列表
+        if ("LANDLORD".equals(currentUser.getRole())) {
+            // 房东角色，返回收到的预约（租客发起的）
+            appointments = appointmentService.getAppointmentsByLandlordId(currentUser.getId(), status);
+        } else if ("TENANT".equals(currentUser.getRole())) {
+            // 租客角色，返回自己创建的预约
+            appointments = appointmentService.getAppointmentsByUserIdAndStatus(currentUser.getId(), status);
+        } else {
+            // 管理员角色，返回所有预约（暂时使用租户的查询逻辑）
+            appointments = appointmentService.getAppointmentsByUserIdAndStatus(currentUser.getId(), status);
+        }
 
         Map<String, Object> data = new HashMap<>();
         data.put("appointments", appointments);
