@@ -22,6 +22,7 @@ public class UsersController {
 
     /**
      * 创建用户
+     * 
      * @param users 用户信息
      * @return 创建结果
      */
@@ -32,6 +33,7 @@ public class UsersController {
 
     /**
      * 根据ID获取用户详情
+     * 
      * @param id 用户ID
      * @return 用户信息
      */
@@ -42,7 +44,8 @@ public class UsersController {
 
     /**
      * 更新用户信息
-     * @param id 用户ID
+     *
+     * @param id    用户ID
      * @param users 更新的用户信息
      * @return 更新结果
      */
@@ -53,6 +56,7 @@ public class UsersController {
 
     /**
      * 删除用户
+     * 
      * @param id 用户ID
      * @return 删除结果
      */
@@ -63,6 +67,7 @@ public class UsersController {
 
     /**
      * 获取所有用户列表
+     * 
      * @return 用户列表
      */
     @GetMapping
@@ -72,6 +77,7 @@ public class UsersController {
 
     /**
      * 根据用户名获取用户
+     * 
      * @param username 用户名
      * @return 用户信息
      */

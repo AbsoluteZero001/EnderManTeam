@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UsersMapper extends BaseMapper<Users> {
     /**
      * 根据用户名查询系统用户
+     * 
      * @param username 用户名
      * @return 匹配的用户对象，如果未找到则返回null
      */

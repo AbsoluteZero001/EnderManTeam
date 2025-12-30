@@ -26,7 +26,8 @@ public class RegisterRequestController {
     private final JwtUtil jwtUtil;
     private final UsersService UsersService;
 
-    public RegisterRequestController(RegisterRequestService service, CaptchaService captchaService, JwtUtil jwtUtil, UsersService UsersService) {
+    public RegisterRequestController(RegisterRequestService service, CaptchaService captchaService, JwtUtil jwtUtil,
+                                     UsersService UsersService) {
         this.service = service;
         this.captchaService = captchaService;
         this.jwtUtil = jwtUtil;
@@ -40,8 +41,7 @@ public class RegisterRequestController {
                     request.getUsername(),
                     request.getPassword(),
                     request.getRole(),
-                    "ACTIVE"
-            );
+                    "ACTIVE");
             service.register(user);
             return ResponseEntity.ok(new ResponseResult(true, "注册成功"));
         } catch (Exception e) {

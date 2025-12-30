@@ -39,7 +39,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     @Override
     public boolean deleteUser(Long id) {
         Users user = getUserById(id);
-        if (user == null) return false;
+        if (user == null)
+            return false;
         user.setIsDeleted(1);
         usersMapper.updateById(user);
         return true;

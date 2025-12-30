@@ -26,14 +26,14 @@ public interface HousesMapper extends BaseMapper<Houses> {
     /**
      * 房源分页 + 条件查询
      *
-     * @param page 分页对象（MyBatis-Plus）
-     * @param keyword 关键词（标题 / 描述）
-     * @param type 房屋类型
-     * @param minArea 最小面积
-     * @param maxArea 最大面积
+     * @param page     分页对象（MyBatis-Plus）
+     * @param keyword  关键词（标题 / 描述）
+     * @param type     房屋类型
+     * @param minArea  最小面积
+     * @param maxArea  最大面积
      * @param minPrice 最低价格
      * @param maxPrice 最高价格
-     * @param address 地址
+     * @param address  地址
      * @return 分页房源数据
      */
     Page<Houses> selectPageByConditions(
@@ -44,6 +44,5 @@ public interface HousesMapper extends BaseMapper<Houses> {
             @Param("maxArea") Double maxArea,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
-            @Param("address") String address
-    );
+            @Param("address") String address);
 }
